@@ -1,0 +1,165 @@
+---
+title: "Swedish_Data"
+author: "Gift"
+date: "2025-11-18"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+##Importing the dataset
+```{r}
+swedish_data<-read.csv("Swedish_Auto_Insurance_Data.csv", 
+                       stringsAsFactors = F)
+print(swedish_data)
+```
+
+#Checking for NA's
+
+```{r}
+is.na(swedish_data)
+```
+
+##Check data summary
+```{r}
+summary(swedish_data)
+```
+
+##Check the structure of the dataset
+```{r}
+str(swedish_data)
+```
+
+#Question 1: Exploring the data using Histogram for visualization for X
+```{r}
+hist(swedish_data$X,
+     main = "Number of claims",
+     xlab = "Claims")
+```
+
+#Histogram visualization for Y
+```{r}
+hist(swedish_data$Y,
+     main = "Total Claim Amount",
+     ylab = "Amount")
+summary(swedish_data$X)
+summary(swedish_data$Y)
+```
+
+
+```{r}
+plot(swedish_data$X,swedish_data$Y, main = "Ananlysis of claims", xlab = "Number of claims", ylab = "Total payment for all claims", pch = 19, col=c("black","purple"))
+
+library(ggplot2)
+ggplot(swedish_data, aes(x = X, y = Y)) +
+  geom_point(color = "blue") +
+  geom_smooth(method = "loess", col = "green")
+```
+
+#Boxplot for X and Y
+```{r}
+boxplot(swedish_data$X,
+        main = "Boxplot of X (Number of Claims)",
+        xlab = "X",
+        col = "lightgreen")
+boxplot(swedish_data$Y,
+        main = "Boxplot of Y (Total Amount)",
+        ylab = "Y",
+        col = "orange")
+
+
+```
+
+##Identify Outliers in X
+```{r}
+outliers_X <- boxplot.stats(swedish_data$X)$out
+outliers_X
+```
+
+##Identify Outliers in Y
+```{r}
+outliers_Y <- boxplot.stats(swedish_data$Y)$out
+outliers_Y
+```
+
+##Obtaining the Pearson's product moment
+```{r}
+cor(swedish_data$X,
+    swedish_data$Y,
+    method = "pearson")
+cor(swedish_data[, c("X", "Y")])
+
+
+```
+
+
+#Obtaining the Spearman's Rho And the Correlation Matrix
+```{r}
+cor(swedish_data$X,
+    swedish_data$Y,
+    method = "spearman")
+cor(swedish_data[, c("X", "Y")],
+    method = "spearman")
+
+
+```
+
+##Obtaining the Kendall's Tau And Correlation Matrix
+```{r}
+cor(swedish_data$X,
+    swedish_data$Y,
+    method = "kendall")
+cor(swedish_data[, c("X", "Y")],
+    method = "kendall")
+
+
+```
+
+#Obtaining the P-value
+```{r}
+cor.test(swedish_data$X,
+         swedish_data$Y,
+         method = "kendall")
+pearson_test<-cor.test(swedish_data$X,swedish_data$Y,
+                       method = "pearson")
+print(pearson_test$p.value)
+
+spearman_test<-cor.test(swedish_data$X,swedish_data$Y,
+                        method = "spearman")
+print(spearman_test)
+
+kendall_tau_test<-cor.test(swedish_data$X,swedish_data$Y,
+                           method = "kendall")
+print(kendall_tau_test)
+
+```
+
+##Regress Y on X and predict Y using X
+```{r}
+model <- lm(Y ~ X, data = swedish_data)
+summary(model)
+
+```
+
+#Added Regression to the scatter plot 
+```{r}
+plot(swedish_data$X,swedish_data$Y, main = "Ananlysis of claims", xlab = "Number of claims", ylab = "Total payment for all claims", pch = 19, col=c("black","purple"))
+  abline(model, col = "red")
+```
+
+##predict for Y
+```{r}
+predictions<-predict(model,newdata = swedish_data)
+head(cbind(swedish_data$X,swedish_data$Y,predictions))
+```
+
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
